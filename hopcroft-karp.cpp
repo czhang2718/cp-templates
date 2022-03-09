@@ -1,4 +1,4 @@
-// aight so O(E*sqrt(V)) maximum matching given bipartite graph
+// O(E*sqrt(V)) maximum matching given bipartite graph
 // augmenting paths
 // like kuhns but find as many k-length paths as possible each iteration
 // can show each iteration k increases

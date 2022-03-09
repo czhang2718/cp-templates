@@ -41,6 +41,10 @@ struct segtree{
     assign(l, r, v, 0, 0, n+1);
   }
 
+  void assign(int i, int v){
+    assign(i, i+1, v);
+  }
+
   ll get_sum(int l, int r, int x, int lx, int rx){
     push(x, lx, rx);
     if(lx>=l && rx<=r) return sum[x];
@@ -52,5 +56,9 @@ struct segtree{
   ll get_sum(int l, int r){
   	if(r<=l) return 0;
     return get_sum(l, r, 0, 0, n+1);
+  }
+
+  ll get(int i){
+    return get_sum(i, i+1);
   }
 };

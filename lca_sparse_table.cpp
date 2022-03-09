@@ -11,7 +11,7 @@ void predfs(int x){
   t++;
   tin[x]=t;
   et[t]=x;
-  trav(k, adj[x]){
+  for(int k:adj[x]){
     if(k!=par[x]){
       par[k]=x;
       height[k]=height[x]+1;
@@ -29,6 +29,9 @@ int lca(int a, int b){
 }
 
 void init(){
+  for(int i=2; i<2*n; i++){
+    lg[i]=lg[i/2]+1;
+  }
   predfs(1);
   int N=2*n-2;
   rep(i, 1, N){

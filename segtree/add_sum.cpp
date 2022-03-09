@@ -9,8 +9,8 @@ struct segtree{
   segtree(int n){
     this->n=n;
     no_op=0; // *CHECK*
-    sum.resize(4*n);
-    op.resize(4*n, no_op);
+    sum.resize(4*(n+1));
+    op.resize(4*(n+1), no_op);
   }
 
   void push(int x, int lx, int rx){

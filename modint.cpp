@@ -48,5 +48,5 @@ struct ModInt {
 };
 
 constexpr ll mod = 1000000007; //check!
-using mint = ModInt<mod>;
-mint operator"" _mi(unsigned long long n) { return mint(n); }
+using mi = ModInt<mod>;
+mi operator"" _mi(unsigned long long n) { return mi(n); }

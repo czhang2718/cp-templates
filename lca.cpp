@@ -12,7 +12,7 @@ void dfs1(int x){
   rep(i, 1, K){
     par[x][i]=par[par[x][i-1]][i-1];
   }
-  trav(k, adj[x]){
+  for(int k : adj[x]){
     if(k!=par[x][0]){
       par[k][0]=x;
       height[k]=height[x]+1;

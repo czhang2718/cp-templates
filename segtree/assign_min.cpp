@@ -8,9 +8,9 @@ struct segtree{
 
   segtree(int n){
     this->n=n;
-    mn.resize(4*n);
-    op.resize(4*n);
+    mn.resize(4*(n+1), 1e18);
     no_op=-1; // *CHECK*
+    op.resize(4*(n+1),  no_op);
   }
 
   void push(int x, int lx, int rx){
@@ -47,7 +47,11 @@ struct segtree{
   }
 
   ll get_min(int l, int r){
-    if(r<=l) return 0; // *CHECK*
+    if(r<=l) return 1e18; // *CHECK*
     return get_min(l, r, 0, 0, n+1);
+  }
+
+  ll get(int i){
+    return get_min(i, i+1);
   }
 };
