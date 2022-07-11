@@ -8,7 +8,7 @@ long long bpow(long long a, long long b, long long mod){
 
 // miller rabin 
 // test if ll is prime
-// for int, prefer sqrt or testing primes
+// for int, prefer sqrt or testing precomputed primes
 // O(log n) 
 bool isPrime(long long n){
   if(n==1) return 0;

@@ -1,16 +1,12 @@
-// Updated 9/5/2021 
-// Verified on https://codeforces.com/edu/course/2/lesson/5/2/practice/contest/279653/problem/E
-
-
 struct segtree{
   int n, no_op;
   vector<ll> mn, op;
 
   segtree(int n){
     this->n=n;
-    mn.resize(4*(n+1), 1e18);
+    mn.resize(4*n, 1e18);
     no_op=-1; // *CHECK*
-    op.resize(4*(n+1),  no_op);
+    op.resize(4*n,  no_op);
   }
 
   void push(int x, int lx, int rx){
@@ -35,7 +31,11 @@ struct segtree{
 
   void assign(int l, int r, ll v){
     if(r<=l) return;
-    assign(l, r, v, 0, 0, n+1);
+    assign(l, r, v, 0, 0, n);
+  }
+
+  void assign(int i, ll v){
+    assign(i, i+1, v);
   }
 
   ll get_min(int l, int r, int x, int lx, int rx){
@@ -48,7 +48,7 @@ struct segtree{
 
   ll get_min(int l, int r){
     if(r<=l) return 1e18; // *CHECK*
-    return get_min(l, r, 0, 0, n+1);
+    return get_min(l, r, 0, 0, n);
   }
 
   ll get(int i){

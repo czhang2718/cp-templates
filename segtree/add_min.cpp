@@ -38,7 +38,11 @@ struct segtree{
 
   void add(int l, int r, int v){
     if(r<=l) return;
-    add(l, r, v, 0, 0, n+1);
+    add(l, r, v, 0, 0, n);
+  }
+
+  void add(int i, int v){
+    add(i, i+1, v);
   }
 
   ll get_min(int l, int r, int x, int lx, int rx){
@@ -50,8 +54,8 @@ struct segtree{
   }
 
   ll get_min(int l, int r){
-    if(r<=l) return 0;
-    return get_min(l, r, 0, 0, n+1);
+    if(r<=l) return 1e18; // CHCK
+    return get_min(l, r, 0, 0, n);
   }
 };
 

@@ -1,7 +1,3 @@
-// Updated 8/14/2021
-// Verified on https://codeforces.com/edu/course/2/lesson/5/2/practice/contest/279653/problem/A
-
-
 struct segtree{
   vector<ll> op, mx;
   int n;
@@ -21,7 +17,7 @@ struct segtree{
     op[x]=0;
   }
 
-  void add(int l, int r, int v, int x, int lx, int rx){
+  void add(int l, int r, ll v, int x, int lx, int rx){
     push(x, lx, rx);
     if(lx>=l && rx<=r){
       op[x]=v;
@@ -36,21 +32,37 @@ struct segtree{
     mx[x]=max(mx[2*x+1], mx[2*x+2]);
   }
 
-  void add(int l, int r, int v){
+  void add(int l, int r, ll v){
     if(r<=l) return;
-    add(l, r, v, 0, 0, n+1); //1 index
+    add(l, r, v, 0, 0, n);
   }
+
+  void add(int i, ll v){ add(i, i+1, v); }
 
   ll get_max(int l, int r, int x, int lx, int rx){
     if(lx>=l && rx<=r) return mx[x];
-    if(lx>=r || rx<=l) return -LONG_LONG_MAX;
+    if(lx>=r || rx<=l) return -inf;
     push(x, lx, rx);
     int m=(lx+rx)/2;
     return max(get_max(l, r, 2*x+1, lx, m), get_max(l, r, 2*x+2, m, rx));
   }
 
   ll get_max(int l, int r){
-    if(r<=l) return 0;
-    return get_max(l, r, 0, 0, n+1);
+    if(r<=l) return -inf;
+    return get_max(l, r, 0, 0, n);
+  }
+
+  ll get(int i){ return get_max(i, i+1); }
+
+  void set(int i, ll v){ add(i, -get(i)+v); }
+
+  void set_max(int i, ll v){ 
+    ll cur=get(i);
+    if(v>cur) set(i, v);
+  }
+
+  void set_min(int i, ll v){ 
+    ll cur=get(i);
+    if(v<cur) set(i, v);
   }
 };
