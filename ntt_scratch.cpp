@@ -1,4 +1,5 @@
-// uses modint2
+#include "bits/stdc++.h"
+using namespace std;
 
 typedef long long ll;
 
@@ -50,71 +51,65 @@ struct ModInt {
     return is;
   }
 };
-const ll mod = 998244353; //check!
+const ll mod = (119<<23)+1; //check!
 using mi = ModInt<mod>;
 mi operator"" _mi(unsigned long long n) { return mi(n); }
-mi power(mi a, int b){
-    mi ans = 1;
-    while(b > 0) {
-        if(b % 2 == 1) {
-            ans = ans * a;
-        }
-        a = a * a;
-        b /= 2;
-    }
-    return ans;
+
+const int N=1<<20;
+int n,m;
+mi w=3;
+mi a[N], b[N], c[N], temp[N];
+mi root[N];
+mi inv[21];
+
+void dft(mi *y, mi *A, int n, int skip, bool invert){
+	// evaluates A at 2^n th roots of unity: y
+	if(n==0){
+		y[0]=A[0];
+		return;
+	}
+	dft(y, A, n-1, skip*2, 0);
+	dft(y+skip, A+skip, n-1, skip*2, 0);
+	for(int i=0; i<(1<<(n-1)); i++){
+		mi a=y[2*i*skip], b=root[i*skip]*y[2*i*skip+skip];
+		temp[i]=(a+b)*(invert?inv[n]:1);
+		temp[i+(1<<(n-1))]=(a-b)*(invert?inv[n]:1);
+	}
+	for(int i=0; i<(1<<n); i++){
+		y[i*skip]=temp[i];
+	}
 }
 
-void fft(vector<mi> & a, bool invert) {
-    ll n = a.size();
-    mi root = power(3, (mod - 1) / n);
-    mi inv = power(root, mod - 2);
-    for (ll i = 1, j = 0; i < n; i++) {
-        ll b = n >> 1;
-        for (; j & b; b >>= 1)
-            j ^= b;
-        j ^= b;
-
-        if (i < j)
-            swap(a[i], a[j]);
-    }
-
-    for (ll len = 2; len <= n; len <<= 1) {
-        mi wlen = invert ? inv : root;
-        for (ll i = len; i < n; i <<= 1)
-            wlen = wlen * wlen;
-
-        for (ll i = 0; i < n; i += len) {
-            mi w = 1;
-            for (ll j = 0; j < len / 2; j++) {
-                mi u = a[i+j], v = a[i+j+len/2] * w;
-                a[i+j] = u+v;
-                a[i+j+len/2] = u-v;
-                w = w * wlen;
-            }
-        }
-    }
-
-    if (invert) {
-        mi n_1 = power(n, mod - 2);
-        for (mi & x : a) {
-            x = x * n_1;
-        }
-    }
+void ntt(int n){
+	inv[n]=mi(1)/(1<<n);
+	for(int i=n-1; i>=0; i--) inv[i]=inv[i+1]*2;
+	mi r=w.pow(int(mi(-1)/(1<<n)));
+	root[0]=1;
+	for(int i=1; i<(1<<n); i++) root[i]=root[i-1]*r;
+	mi ya[1<<n], yb[1<<n];
+	dft(ya, a, n, 1, 0);
+	dft(yb, b, n, 1, 0);
+	mi y[1<<n];
+	for(int i=0; i<(1<<n); i++) y[i]=ya[i]*yb[i];
+	r=mi(1)/r;
+	for(int i=1; i<(1<<n); i++) root[i]=root[i-1]*r;
+	dft(c, y, n, 1, 1);
 }
 
-vector<mi> multiply(vector<mi> a, vector<mi> b) {
-    vector<mi> fa(a.begin(), a.end()), fb(b.begin(), b.end());
-    ll n = 1;
-    while (n < (ll) a.size() + (ll) b.size()) 
-        n <<= 1;
-    fa.resize(n);
-    fb.resize(n);
+int main(){
+	cin.tie(0)->sync_with_stdio(0);
 
-    fft(fa, false);
-    fft(fb, false);
-    for (ll i = 0; i < n; i++)
-        fa[i] = fa[i] * fb[i];
-    fft(fa, true);
-    return fa;
+	cin >> n >> m;
+	for(int i=0; i<n; i++) cin >> a[i];
+	for(int i=0; i<m; i++) cin >> b[i];
+
+	int k=0;
+	while((1<<k)<n+m) k++;
+		
+	ntt(k);
+
+	for(int i=0; i<n+m-1; i++){
+		cout << c[i] << " ";
+	}
 }
+// https://judge.yosupo.jp/problem/convolution_mod (945 ms)

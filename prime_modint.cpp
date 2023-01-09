@@ -94,22 +94,17 @@ class  MMint     // MONTGOMERY FORM
     bool operator != ( const MMint &p ) const
   { return (x >= mod ? x - mod : x) != (p.x >= mod ? p.x - mod : p.x); };
 
-  MMint  inverse()  const {
-    u64  g = mod,  r = (*this).x,  x = 0,  y = 1;
-    while( r != 0 )  {
-      u64  q = g / r;
-      g %= r;    swap( g, r );
-      x -= q*y;  swap( x, y );
-    }
-    return  x < 0 ? x + mod : x;
-  }
-
     MMint  pow( int64_t k ) const  {
         MMint  now = *this,  ret = 1;
         for( ; k > 0 ; k >>= 1, now *= now )  {
             if( k & 1 )  ret *= now;
         }
         return ret;
+    }
+
+
+    MMint  inverse()  const {
+        return pow(mod-2);
     }
 
     friend ostream &operator << ( ostream &os, const MMint &p )  { 
